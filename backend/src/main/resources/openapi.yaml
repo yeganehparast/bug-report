@@ -1,0 +1,479 @@
+openapi: 3.0.1
+info:
+  contact:
+    email: mehdi.yeganehparast@gmail.com
+  description: "This API provides endpoints for adding a bug, list the bugs, update\
+    \ a bug's information such as assignee and description and finally find a bug"
+  license:
+    name: MIT Licence
+    url: https://opensource.org/licenses/MIT
+  termsOfService: https://www.opensource.org/licenses/MIT
+  title: Bug Tracker
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/v1/
+paths:
+  /bug:
+    get:
+      operationId: listBugs
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArrayOfBugs'
+          description: Input accepted for consuming by another processor
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+          description: Invalid input supplied
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+          description: Bug not found
+      summary: list bugs
+      x-accepts: application/json
+    post:
+      operationId: createBug
+      requestBody:
+        $ref: '#/components/requestBodies/BugRequestBody'
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bug'
+          description: Bug created
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+          description: Invalid input supplied
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+          description: Bug not found
+      summary: Create a new bug
+      x-codegen-request-body-name: bug_body
+      x-content-type: application/json
+      x-accepts: application/json
+    put:
+      operationId: updateBug
+      requestBody:
+        $ref: '#/components/requestBodies/BugRequestBody'
+      responses:
+        "202":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bug'
+          description: Item updated
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+          description: Invalid input supplied
+      summary: Update a bug
+      x-codegen-request-body-name: bug_body
+      x-content-type: application/json
+      x-accepts: application/json
+  /bug/assignee/{assigneeName}:
+    get:
+      operationId: getBugByAssignee
+      parameters:
+        - description: The assignee name to be searched
+          example: 0
+          explode: false
+          in: path
+          name: assigneeName
+          required: true
+          schema:
+            type: string
+          style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArrayOfBugs'
+          description: successful operation
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+          description: Invalid input
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+          description: Bug not found
+      summary: Find bugs by assignee name
+      x-accepts: application/json
+  /bug/reporter/{reporterName}:
+    get:
+      operationId: getBugByReporter
+      parameters:
+        - description: The reporter name to be searched
+          example: 0
+          explode: false
+          in: path
+          name: reporterName
+          required: true
+          schema:
+            type: string
+          style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArrayOfBugs'
+          description: successful operation
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+          description: Invalid input
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+          description: Bug not found
+      summary: Find bugs by reporter name
+      x-accepts: application/json
+  /bug/{bugId}:
+    delete:
+      operationId: deleteBug
+      parameters:
+        - description: The bug id name to be deleted
+          example: 0
+          explode: false
+          in: path
+          name: bugId
+          required: true
+          schema:
+            format: int64
+            type: integer
+          style: simple
+      responses:
+        "204":
+          content: { }
+          description: successful delete
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+          description: Invalid input supplied
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+          description: Bug not found
+      summary: delete a bug
+      x-accepts: application/json
+    get:
+      operationId: getBugById
+      parameters:
+        - description: The bug id name to be searched
+          example: 0
+          explode: false
+          in: path
+          name: bugId
+          required: true
+          schema:
+            format: int64
+            type: integer
+          style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bug'
+          description: successful operation
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+          description: Invalid input
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+          description: Bug not found
+      summary: Find bugs by bug id
+      x-accepts: application/json
+  /bug/topic/{topic}:
+    get:
+      operationId: getBugByTopic
+      parameters:
+        - description: The topic name to be searched
+          example: 0
+          explode: false
+          in: path
+          name: topic
+          required: true
+          schema:
+            type: string
+          style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArrayOfBugs'
+          description: successful operation
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+          description: Invalid input
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+          description: Bug not found
+      summary: Find bugs by topic
+      x-accepts: application/json
+  /bug/state/{state}:
+    get:
+      operationId: getBugByState
+      parameters:
+        - description: The state name to be searched
+          example: 0
+          explode: false
+          in: path
+          name: state
+          required: true
+          schema:
+            enum:
+              - NEW
+              - IN-PROGRESS
+              - IN-REVIEW
+              - DONE
+            example: NEW
+            type: string
+          style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArrayOfBugs'
+          description: successful operation
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+          description: Invalid input
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+          description: Bug not found
+      summary: Find bugs by state
+      x-accepts: application/json
+  /bug/history/{bugId}:
+    get:
+      operationId: getBugHistory
+      parameters:
+        - description: The bugId to be searched in the histories
+          example: 0
+          explode: false
+          in: path
+          name: bugId
+          required: true
+          schema:
+            format: int64
+            type: integer
+          style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArrayOfHistory'
+          description: successful operation
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+          description: Invalid input
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+          description: Bug not found
+      summary: Find bug histories
+      x-accepts: application/json
+components:
+  requestBodies:
+    BugRequestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Bug'
+      description: A JSON object containing new bug's information
+      required: true
+  schemas:
+    Bug:
+      example:
+        bugId: 1
+        created: 2022-07-27T08:00:00Z
+        description: some description related to the bug
+        topic: a topic
+        assignees:
+          - fullName: John Smith
+            email: joe@example.com
+          - fullName: John Smith
+            email: joe@example.com
+        reporter:
+          fullName: John Smith
+          email: joe@example.com
+        assignee:
+          fullName: John Smith
+          email: joe@example.com
+        state: NEW
+        updated: 2022-07-27T08:00:00Z
+      properties:
+        bugId:
+          example: 1
+          format: int64
+          type: integer
+        description:
+          example: some description related to the bug
+          type: string
+        topic:
+          example: a topic
+          type: string
+        assignee:
+          $ref: '#/components/schemas/Person'
+        reporter:
+          $ref: '#/components/schemas/Person'
+        state:
+          description: The states which are defined for an bug
+          enum:
+            - NEW
+            - IN-PROGRESS
+            - IN-REVIEW
+            - DONE
+          example: NEW
+          type: string
+        created:
+          description: The created timestamp
+          example: 2022-07-27T08:00:00Z
+          format: date-time
+          type: string
+        updated:
+          description: The updated timestamp
+          example: 2022-07-27T08:00:00Z
+          format: date-time
+          type: string
+        assignees:
+          items:
+            $ref: '#/components/schemas/Person'
+          type: array
+      required:
+        - description
+        - reporter
+        - topic
+      type: object
+    Person:
+      example:
+        fullName: John Smith
+        email: joe@example.com
+      properties:
+        fullName:
+          description: full name
+          example: John Smith
+          type: string
+        email:
+          description: email
+          example: joe@example.com
+          format: email
+          type: string
+      required:
+        - email
+        - fullName
+      type: object
+    History:
+      example:
+        newValue: newValue
+        bug:
+          bugId: 1
+          created: 2022-07-27T08:00:00Z
+          description: some description related to the bug
+          topic: a topic
+          assignees:
+            - fullName: John Smith
+              email: joe@example.com
+            - fullName: John Smith
+              email: joe@example.com
+          reporter:
+            fullName: John Smith
+            email: joe@example.com
+          assignee:
+            fullName: John Smith
+            email: joe@example.com
+          state: NEW
+          updated: 2022-07-27T08:00:00Z
+        oldValue: oldValue
+        updated: 2000-01-23T04:56:07.000+00:00
+      properties:
+        bug:
+          $ref: '#/components/schemas/Bug'
+        newValue:
+          description: new stroed value
+          type: string
+        oldValue:
+          description: old stored value
+          type: string
+        updated:
+          description: time of update
+          format: date-time
+          type: string
+      type: object
+    ArrayOfBugs:
+      items:
+        $ref: '#/components/schemas/Bug'
+      type: array
+    ArrayOfPerson:
+      items:
+        $ref: '#/components/schemas/Person'
+      type: array
+    ArrayOfHistory:
+      items:
+        $ref: '#/components/schemas/History'
+      type: array
+    ErrorMessage:
+      properties:
+        statusCode:
+          type: string
+        message:
+          type: string
+        timestamp:
+          format: date-time
+          type: string
+      type: object
